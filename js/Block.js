@@ -7,14 +7,7 @@ Block = function(scene, game) {
     b[0].isVisible = true;
     b[0].convertToFlatShadedMesh();
     b[0].scaling.multiplyInPlace(new BABYLON.Vector3(0.01,0.01,0.01));
-//    scene.beginAnimation(b.skeleton, 0, 100, true, 10);
 
-    // Creates a box (yes, our ship will be a box)
-//    var vd = BABYLON.VertexData.CreateBox(2.0);
-//    // Apply the box shape to our mesh
-//    vd.applyToMesh(this, false);
-
-//    this.scaling.x = this.scaling.z = 0.5;
     this.position.y = 1;
     this.rotationQuaternion = new BABYLON.Quaternion(0, 0, 0, 1);
     this.rotation = BABYLON.Vector3.Zero();
@@ -27,8 +20,6 @@ Block = function(scene, game) {
     // The block is starting standing
     this.state = Block.STATE_STAND;
 
-    // True if this block is moving, false otherwise.
-    // If set to true, user inputs is NOT taken into account
     this.isMoving = false;
 
     // The block speed
@@ -49,13 +40,8 @@ Block = function(scene, game) {
 /** The state of the block **/
 Block.STATE_STAND  = 0;
 
-// The block is crouched and takes 2 squares in width and 1 in height
-// [ ][ ]
 Block.STATE_CROUCH_WIDTH = 1;
 
-// The block is crouched and takes 1 square in width and 2 in height
-// [ ]
-// [ ]
 Block.STATE_CROUCH_HEIGHT = 2;
 
 
@@ -72,10 +58,6 @@ Block.DIRECTIONS = {
     LEFT : 37
 };
 
-/**
- * Function called when the rotation animation is over.
- * Check if the box is flying
- */
 Block.prototype._endRotationAnimation = function() {
     // The box is not moving anymore
     this.isMoving = false;
@@ -84,11 +66,6 @@ Block.prototype._endRotationAnimation = function() {
     this.game.turn();
 };
 
-/**
- * Animate the translation of the box
- * @param axis The axis of the translation
- * @param distance The distance
- */
 Block.prototype.animateTranslation = function(axis, distance, yvalue) {
 
     var end = this.position.clone(),
@@ -124,29 +101,20 @@ Block.prototype.animateTranslation = function(axis, distance, yvalue) {
     // Add these keys to the animation
     translate.setKeys(keys);
 
-    // Link the animation to the mesh
     this.animations.push(translate);
 
     // Run the animation !
     this.scene.beginAnimation(this, 0, 100, false, this.speed);
 };
 
-/**
- * Animate the rotation of the block
- * @param axis The rotation axis
- * @param amount The angle to rotate
- */
 Block.prototype.animateRotation = function(axis, angle) {
     // The quaternion corresponding to this rotaton
     var rotationQuaternion = BABYLON.Quaternion.RotationAxis(axis, angle);
 
-    // The final value
     var end = rotationQuaternion.multiply(this.rotationQuaternion);
 
-    // The starting value
     var start = this.rotationQuaternion;
 
-    // Create the Animation object
     var rotation = new BABYLON.Animation(
         "rotation",
         "rotationQuaternion",
@@ -163,10 +131,8 @@ Block.prototype.animateRotation = function(axis, angle) {
         value: end
     }];
 
-    // Add these keys to the animation
     rotation.setKeys(keys);
 
-    // Link the animation to the block
     this.animations.push(rotation);
 
     // Run the animation !
@@ -211,11 +177,6 @@ Block.prototype._getMovingDistance = function(direction) {
     return {distance:d, yvalue:y};
 };
 
-/**
- * Set the new state of the block after a move.
- * @param direction
- * @private
- */
 Block.prototype._setNewState = function(direction) {
     switch (this.state) {
         case Block.STATE_STAND:
@@ -242,10 +203,6 @@ Block.prototype._setNewState = function(direction) {
     }
 };
 
-/**
- * Handle the user inputs (arrow keys of the keyboard)
- * @param keycode The code of the pressed key
- */
 Block.prototype.handleUserInput = function(keycode) {
     if (this.isMoving === true || this.isFalling === true) {
         // nothing to do here, the block is moving
@@ -285,9 +242,6 @@ Block.prototype.handleUserInput = function(keycode) {
     }
 };
 
-/**
- * Reset the block state, Y position and rotation.
- */
 Block.prototype.resetState = function() {
     this.state = Block.STATE_STAND;
     this.isMoving = false;

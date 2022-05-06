@@ -1,10 +1,3 @@
-/**
- * Builds a new timer
- * @param time The time in milliseconds
- * @param scene The scene
- * @param callback The callback function called when the timer is finished
- * @constructor
- */
 Timer = function(time, scene, callback) {
 
     this.maxTime = this.currentTime = time;

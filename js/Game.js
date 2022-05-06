@@ -1,5 +1,5 @@
 var VERSION = 1.0,
-    AUTHOR = "temechon@pixelcodr.com";
+    AUTHOR = "He";
 
 Game = function(canvasId) {
 

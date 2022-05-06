@@ -4,10 +4,8 @@ Level = function(w, h, scene, game) {
     this.scene = scene;
     this.game = game;
 
-    // The starting position in this level
     this.start = null;
 
-    // The finish point in this level
     this.finish = null;
 
     this.switches = [];
@@ -17,8 +15,6 @@ Level = function(w, h, scene, game) {
         this.tiles[i] = [];
     }
 };
-
-
 
 Level.prototype.addTile = function(i, j, type) {
     this.tiles[i][j] = new Tile(i, j, type, this.scene, this.game);
@@ -40,9 +36,6 @@ Level.prototype.addEnder = function(i, j, t) {
     this.tiles[i][j] = new Ender(i, j, t, this.scene, this.game);
 };
 
-/**
- * Delete the current level
- */
 Level.prototype.dispose = function() {
     for (var i=0; i<this.width; i++) {
         for (var j=0; j<this.height; j++){
@@ -61,16 +54,10 @@ Level.prototype.getTile = function(i, j) {
     }
 };
 
-/**
- * Returns the point at the center of the level
- */
 Level.prototype.getCenter = function() {
     return new BABYLON.Vector2(this.width/2, this.height/2);
 };
 
-/**
- * Returns the distance needed to see the whole level
- */
 Level.prototype.getDistance = function() {
     return Math.max(this.width+2, this.height+2);
 };
@@ -108,10 +95,6 @@ Level.prototype.display = function() {
     })
 };
 
-/**
-* Creates a new map from a matrix of ints
-* @param matrix a double array of ints. 0 for a tile means no tile
-*/
 Level.FromInts = function(matrix, scene, game) {
 
     var nbL = matrix.length;
@@ -126,10 +109,8 @@ Level.FromInts = function(matrix, scene, game) {
             var t = matrix[i][j];
 
             if (Tile.isSwitch(t)) {
-                // Create new switch in this level
                 level.addSwitch(i, j, t);
             } else if (Tile.isTeleporter(t)) {
-                // Create new switch in this level
                 var tt = level.addTeleporter(i, j, t);
                 teleporters.push(tt);
             } else {
@@ -154,7 +135,6 @@ Level.FromInts = function(matrix, scene, game) {
         }
     }
 
-    // Updates switches
     level.switches.forEach(function(s) {
         var res = [];
         for (var i=0 ;i<nbL; i++) {
@@ -171,7 +151,6 @@ Level.FromInts = function(matrix, scene, game) {
         s.tilesToOpen = res;
     });
 
-    // Updates teleporter
     teleporters.forEach(function(s) {
         var res = [];
         for (var i=0 ;i<nbL; i++) {
